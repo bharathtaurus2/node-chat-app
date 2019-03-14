@@ -18,16 +18,34 @@ io.on('connection', (socket) => {
     console.log('User was disconnected')
   });
 
-  socket.on('createChatMessage', (message) => {
-    console.log(message);
+  socket.emit('newMessage', {
+    from: 'Admin',
+    text: 'Welcome to the chat app!',
+    createdAt: new Date().getTime()
+  })
+
+  socket.broadcast.emit('newMessage', {
+    from:'Admin',
+    text: 'A new user has joined',
+    createdAt: new Date().getTime()
   });
 
-  socket.emit('newMessage', {
-    from: 'gb@coolstar.net',
-    to: 'kai@caliper.com',
-    text: 'I hear you!',
-    createdAt: new Date()
+  socket.on('createChatMessage', (message) => {
+    console.log(message);
+    // io.emit('newMessage', {
+    //   from: message.from,
+    //   to: message.to,
+    //   text: message.text,
+    //   createdAt: new Date().getTime()
+    // });
   });
+
+  // socket.emit('newMessage', {
+  //   from: 'gb@coolstar.net',
+  //   to: 'kai@caliper.com',
+  //   text: 'I hear you!',
+  //   createdAt: new Date()
+  // });
 });
 
 server.listen(port, () => {
