@@ -24,23 +24,12 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('newMessage',
     generateMessage('Admin', 'A new user has joined'));
 
-  socket.on('createChatMessage', (message) => {
+  socket.on('createChatMessage', (message, callback) => {
     console.log(message);
+    callback('Message broadcasted!');
     io.emit('newMessage', generateMessage(message.from, message.text));
-    // io.emit('newMessage', {
-    //   from: message.from,
-    //   to: message.to,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // });
   });
 
-  // socket.emit('newMessage', {
-  //   from: 'gb@coolstar.net',
-  //   to: 'kai@caliper.com',
-  //   text: 'I hear you!',
-  //   createdAt: new Date()
-  // });
 });
 
 server.listen(port, () => {
