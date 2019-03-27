@@ -11,6 +11,28 @@ socket.on('connect', function() {
     });
 });
 
+function scrollToBottom() {
+    var messages = jQuery('#messages');
+    var newMessage = messages.children('li:last-child');
+
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var prevMessageHeight = newMessage.prev().innerHeight();
+    // console.log('clientHeight: ',clientHeight,', scrollTop: ',scrollTop,', scrollHeight: ', scrollHeight, ', newMessageHeight: ', newMessageHeight, ', prevMessageHeight: ', prevMessageHeight);
+    
+
+    if (clientHeight + scrollTop + newMessageHeight + prevMessageHeight >= scrollHeight) {
+        console.log('should scroll');
+        
+        messages.scrollTop(scrollHeight);
+    } else {
+        console.log('dont scroll');
+        
+    }
+}
+
 socket.on('newMessage', function(message) {
     var formattedTime = moment(message.createdAt).format('hh:mm a');
     var template = jQuery('#message-template').html();
@@ -20,6 +42,7 @@ socket.on('newMessage', function(message) {
         createdAt: formattedTime
     });
     jQuery('#messages').append(html);
+    scrollToBottom();
     // var li = jQuery('<li></li>');
     // li.text(`${message.from} ${formattedTime}: ${message.text}`);
     // jQuery('#messages').append(li);
@@ -36,6 +59,8 @@ socket.on('newLocationMessage', function(message) {
     });
 
     jQuery('#messages').append(html);
+    scrollToBottom();
+
     
     // var li = jQuery('<li></li>');
     // var a = jQuery('<a target="_blank">My current location</a>');
