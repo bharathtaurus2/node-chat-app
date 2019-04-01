@@ -1,14 +1,15 @@
 var socket = io();
 
 socket.on('connect', function() {
-    console.log('Connected to server');
-    socket.emit('createChatMessage', {
-        from: 'mike@gmail.com',
-        to: 'suri@poori.com',
-        text: 'Hi there!' 
-    }, function(data) {
-        console.log(data);
-    });
+    var params = jQuery.deparam(window.location.search);
+    socket.emit('join', params, function(err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+            console.log('No error');
+        }
+    });  
 });
 
 function scrollToBottom() {
@@ -100,6 +101,15 @@ locationButton.on('click', function() {
         locationButton.removeAttr('disabled').text('Send Location');
         alert('Could not get location');
     });
+});
+
+socket.on('updateUserList', function(users) {
+    var ol = jQuery('<ol></ol>');
+    users.forEach(function(user) {
+        ol.append(jQuery('<li></li>').text(user));
+    });
+
+    jQuery('#users').html(ol);
 });
 
 socket.on('disconnect', function () {
