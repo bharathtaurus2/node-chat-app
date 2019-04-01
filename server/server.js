@@ -28,13 +28,18 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createChatMessage', (message, callback) => {
-    console.log(message);
     callback('Message broadcasted!');
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    var user = users.getUser(socket.id);
+    if(user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
   });
 
   socket.on('createLocationMessage', (message) => {
-    io.emit('newLocationMessage', generateLocationMessage('Admin', message.latitude, message.longitude));
+    var user = users.getUser(socket.id);
+    if(user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, message.latitude, message.longitude));
+    }
   });
 
   socket.on('join', (params, callback) => {
