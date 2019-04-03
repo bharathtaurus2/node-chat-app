@@ -11,7 +11,7 @@ class Users {
 
     removeUser(id) {
         var usr = this.users.filter((user) => user.id === id);
-        
+
         if(usr) {
             var users = this.users.filter((user) => user.id !== id);
             this.users = users;
@@ -31,4 +31,23 @@ class Users {
     }
 }
 
-module.exports = {Users};
+class Rooms {
+  constructor() {
+      this.rooms = new Set([]);
+  }
+
+  add (room) {
+    this.rooms.add(room);
+  }
+
+  remove(room) {
+    this.rooms.delete(room);
+  }
+
+  getRoomList() {
+    return this.rooms.keys();
+  }
+
+}
+
+module.exports = {Users, Rooms};
